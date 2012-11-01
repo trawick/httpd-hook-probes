@@ -1,0 +1,33 @@
+How to build:
+
+1. set (or add to) CPPFLAGS=-I/path/to/this-directory
+2. Add these arguments to the httpd configure invocation:
+   --enable-exception-hook --enable-hook-probes --with-module=debugging:/path/to/mod_hook_ar.c
+3. build mod_crashstate with apxs:
+   /path/to/apxs -ci mod_crashstate.c
+
+With the current implementation, with a 64-bit build you may see a lot of httpd compile
+warnings about conversion from int to different-sized pointer and a small number of
+warnings about the reverse.  This is regrettable to say the least, but no processing
+is performed on hooks where this would be a problem.
+
+How to configure:
+
+1. Logging request failer in access log: add %{RequestFailer}n to access log format
+2. Logging active module in error log at time of crash:
+
+   Load mod_crashstate with this directive:
+     LoadModule crashstate_module modules/mod_crashstate.so
+
+Examples of error and access log entries:
+
+[Mon Oct 01 08:17:25.824719 2012] [crashstate:notice] [pid 30568:tid 140369329334016] Crash state: mod_crash.c/handler
+[Mon Oct 01 08:17:26.674433 2012] [core:notice] [pid 30566:tid 140369606629152] AH00052: child pid 30568 exit signal Segmentation fault (11)
+
+(The second error log entry is logged automatically.)
+
+192.168.1.208 - - [01/Oct/2012:08:09:27 -0400] "GET /crash/ HTTP/1.1" 403 208 mod_access_compat.c/403/access_checker
+192.168.1.208 - - [01/Oct/2012:08:09:27 -0400] "GET /favicon.ico HTTP/1.1" 404 209 core.c/404/handler
+127.0.0.1 - - [01/Oct/2012:08:46:25 -0400] "GET /" 200 45 -
+
+(The third error log entry logs "-" for the request failer since no error occurred.)
