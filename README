@@ -1,3 +1,8 @@
+Any questions or problems?
+
+Please e-mail me at info@emptyhammock.com, and include "mod_hook_ar" in the subject
+line.
+
 How to build:
 
 1. set (or add to) CPPFLAGS=-I/path/to/this-directory
