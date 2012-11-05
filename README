@@ -9,7 +9,9 @@ How to build:
 With the current implementation, with a 64-bit build you may see a lot of httpd compile
 warnings about conversion from int to different-sized pointer and a small number of
 warnings about the reverse.  This is regrettable to say the least, but no processing
-is performed on hooks where this would be a problem.
+is performed on hooks where this would be a problem.  I plan to write a code generation tool
+to allow a module to specify which hooks or categories of hooks are interesting, and then
+generate typesafe code for that.
 
 How to configure:
 
@@ -19,12 +21,16 @@ How to configure:
    Load mod_crashstate with this directive:
      LoadModule crashstate_module modules/mod_crashstate.so
 
+   (Hopefully a future version of mod_whatkilledus will provide the crash state API so
+   that mod_crashstate is not needed.)
+
 Examples of error and access log entries:
 
 [Mon Oct 01 08:17:25.824719 2012] [crashstate:notice] [pid 30568:tid 140369329334016] Crash state: mod_crash.c/handler
 [Mon Oct 01 08:17:26.674433 2012] [core:notice] [pid 30566:tid 140369606629152] AH00052: child pid 30568 exit signal Segmentation fault (11)
 
-(The second error log entry is logged automatically.)
+(The second error log entry above is logged automatically when the httpd parent process
+finds out that the child process exited.)
 
 192.168.1.208 - - [01/Oct/2012:08:09:27 -0400] "GET /crash/ HTTP/1.1" 403 208 mod_access_compat.c/403/access_checker
 192.168.1.208 - - [01/Oct/2012:08:09:27 -0400] "GET /favicon.ico HTTP/1.1" 404 209 core.c/404/handler
