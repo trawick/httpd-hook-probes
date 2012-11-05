@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 source_files = ['*.c', '*.h']
-meta_files = ['CHANGES.txt', 'LICENSE', 'NOTICE', 'README']
+meta_files = ['LICENSE', 'NOTICE', 'README']
 bin_files = []
 
 version = '0.1'
